@@ -1,0 +1,113 @@
+//from question 4 until question 7;
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Define a structure for student information
+struct Student {
+    int number;
+    char name[50];
+    int age;
+    int id; // Assuming an ID is assigned to each student
+    struct Student* next; // Pointer to the next student
+};
+
+// Initialize a global pointer to the head of the linked list
+struct Student* head = NULL;
+
+// Function to add a student to the linked list
+void addStudent(int number, char name[], int age, int id) {
+    struct Student* newStudent = (struct Student*)malloc(sizeof(struct Student));
+    newStudent->number = number;
+    strcpy(newStudent->name, name);
+    newStudent->age = age;
+    newStudent->id = id;
+    newStudent->next = head;
+    head = newStudent;
+}
+
+// Function to print all student information
+void printStudents() {
+    struct Student* current = head;
+    int count = 0;
+    while (current != NULL) {
+        printf("%d - %s %d %d\n", current->number, current->name, current->age, current->id);
+        current = current->next;
+        count++;
+    }
+    printf("Total students: %d\n", count);
+}
+
+// Function to search for a student by name
+void searchByName(char name[]) {
+    struct Student* current = head;
+    while (current != NULL) {
+        if (strcmp(current->name, name) == 0) {
+            printf("Student found: %d - %s %d %d\n", current->number, current->name, current->age, current->id);
+            return;
+        }
+        current = current->next;
+    }
+    printf("Student with name '%s' not found.\n", name);
+}
+
+// Function to delete the next node after finding a student by name
+void deleteNextNode(char name[]) {
+    struct Student* current = head;
+    while (current != NULL) {
+        if (strcmp(current->name, name) == 0) {
+            if (current->next != NULL) {
+                struct Student* temp = current->next;
+                current->next = temp->next;
+                free(temp);
+                printf("Next node deleted.\n");
+                return;
+            } else {
+                printf("No next node to delete.\n");
+                return;
+            }
+        }
+        current = current->next;
+    }
+    printf("Student with name '%s' not found.\n", name);
+}
+
+// Function to find the student with the longest name
+void longestNameStudent() {
+    struct Student* current = head;
+    int max_length = 0;
+    char longest_name[50];
+    while (current != NULL) {
+        int length = strlen(current->name);
+        if (length > max_length) {
+            max_length = length;
+            strcpy(longest_name, current->name);
+        }
+        current = current->next;
+    }
+    printf("The longest name in the list: %s\nLength: %d\n", longest_name, max_length);
+}
+
+// Main function
+int main() {
+    // You can now use these functions to perform the required tasks.
+    // For example:
+    addStudent(1, "Saliha", 27, 201);
+    addStudent(2, "Ece", 19, 203);
+    addStudent(3, "Abdurrahmangazi", 25, 205);
+    
+    printStudents();
+    searchByName("Ece");
+    deleteNextNode("Saliha");
+    longestNameStudent();
+    
+    // Don't forget to free the allocated memory before exiting the program
+    struct Student* current = head;
+    while (current != NULL) {
+        struct Student* temp = current;
+        current = current->next;
+        free(temp);
+    }
+
+    return 0;
+}
